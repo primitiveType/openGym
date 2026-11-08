@@ -52,7 +52,7 @@ function ProfileEditor({ profile, busy, act }) {
   const update = useStore(s => s.update)
   return <form className="card" onSubmit={async e => {
     e.preventDefault()
-    if (await act('profile', { handle, displayName, bio, publicProfile, consent })) update(s => { s.modules = { ...s.modules, social: true } })
+    if (await act('profile', { handle, displayName, bio, publicProfile, consent }) && !profile) update(s => { s.modules = { ...s.modules, social: true } })
   }}>
     <h2>{profile ? t('Your social profile') : t('Enable your social profile')}</h2>
     <label className="social-field">{t('Handle')}<input autoCapitalize="none" autoComplete="off" required pattern="[a-z][a-z0-9_]{2,39}" maxLength={40} value={handle} disabled={!!profile || busy} onChange={e => setHandle(e.target.value.toLowerCase())} /></label>
@@ -120,10 +120,11 @@ export default function Social() {
         <Button disabled={busy} onClick={() => load().catch(e => setError(e.message))}>{t('Refresh')}</Button>
       </div>}
       {!on && <p>{t('Social is switched off. Existing shares remain available; you can manage or remove them here.')}</p>}
-      {(!me || view === 'manage' || !on) && <ProfileEditor key={me || 'new'} profile={status.profile} busy={busy} act={act} />}
+      {status.deleted ? <p>{t('Your social profile was deleted. Your private training log is unchanged.')}</p>
+        : (!me || view === 'manage' || !on) && <ProfileEditor key={me || 'new'} profile={status.profile} busy={busy} act={act} />}
       {me && (view === 'manage' || !on) && <>
         <div className="card"><p>{status.profile.handle}</p><Button onClick={exportData}>{t('Export social data')}</Button>
-          <Button disabled={busy} onClick={() => confirmSheet({ title: t('Delete social profile?'), message: t('Shared workouts will be removed and deletion requests sent to other servers. Your private training log stays.'), confirmText: t('Delete'), onConfirm: () => act('delete') })}>{t('Delete social profile')}</Button>
+          <Button disabled={busy} onClick={() => confirmSheet({ title: t('Delete social profile?'), message: t('Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.'), confirmText: t('Delete'), onConfirm: () => act('delete') })}>{t('Delete social profile')}</Button>
         </div>
         <section className="card"><h2>{t('Connections')}</h2>
           <form onSubmit={e => { e.preventDefault(); act('follow', { actor: target }) }}>

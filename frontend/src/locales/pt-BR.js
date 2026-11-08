@@ -4,6 +4,8 @@
 import pt from './pt.js'
 
 export const PT_BR_OVERRIDES = {
+  "Your social profile was deleted. Your private training log is unchanged.": "Your social profile was deleted. Your private training log is unchanged.",
+  "Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.": "Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.",
   "New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.": "New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.",
   // shortcut: new Social copy uses English; replace with reviewed translations before upstream release.
   "Who can see this workout?": "Who can see this workout?",

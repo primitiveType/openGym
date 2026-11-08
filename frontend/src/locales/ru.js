@@ -1,5 +1,7 @@
 // Russian UI strings. Keys are the English source strings (see lib/i18n.js).
 export default {
+  "Your social profile was deleted. Your private training log is unchanged.": "Your social profile was deleted. Your private training log is unchanged.",
+  "Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.": "Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.",
   "New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.": "New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.",
   // shortcut: new Social copy uses English; replace with reviewed translations before upstream release.
   "Who can see this workout?": "Who can see this workout?",

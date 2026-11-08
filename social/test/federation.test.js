@@ -82,6 +82,7 @@ test('two servers exchange signed follows, current history, interactions and rev
   await cmd(a, 'alice', 'visibility', { id: item.id, visibility: 'friends' }); await drain(a, b);
   assert.equal((await cmd(b, 'carol', 'history', { actor: alice })).items.length, 1, 'Explicit re-sharing publishes a newer authorized version');
   await cmd(a, 'alice', 'delete'); await drain(a, b);
+  assert.equal((await cmd(a, 'alice', 'status')).deleted, true);
   assert.equal((await cmd(b, 'carol', 'feed')).items.length, 0, 'Account deletion removes shared workout history');
 });
 

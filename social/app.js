@@ -288,7 +288,7 @@ export function createSocial({ origin, token, dataDir, testMode = false, paused 
       p = store.put('profile', uid, { ...p, uid, handle, keys, displayName: text(input.displayName, 80) || handle, bio: text(input.bio, 500), publicProfile: input.publicProfile === true });
       return { profile: scrub(p) };
     }
-    if (input.op === 'status') return { enabled: true, profile: p && !p.deleted ? scrub(p) : null,
+    if (input.op === 'status') return { enabled: true, deleted: !!p?.deleted, profile: p && !p.deleted ? scrub(p) : null,
       relations: store.all('relation').filter(r => r.uid === uid), notifications: store.all('notice').filter(n => n.uid === uid).sort((a, b) => b.at.localeCompare(a.at)),
       ...(input.admin ? { reports: store.all('report') } : {}) };
     if (!p || p.deleted) fail(404, 'Enable your social profile first');

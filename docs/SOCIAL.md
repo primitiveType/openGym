@@ -13,8 +13,8 @@ and bio are a separate choice. Individual workouts start friends-only after cons
 
 The module switch pauses new sharing. Existing shared logs still receive edits and
 deletions. Settings → Social remains available for managing or removing them.
-Deleting a social account preserves the private training log. The same social
-handle cannot currently be reactivated after deletion.
+Deleting a social account preserves the private training log. Social participation
+cannot currently be reactivated on the same training account after deletion.
 
 Friends-only access trusts the recipients and their server operators; it is not
 end-to-end encryption. Public or previously delivered content can be retained by
