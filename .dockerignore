@@ -2,6 +2,8 @@
 frontend/dist
 media
 data
+social-data
+social-secret
 .env
 .git
 *.log

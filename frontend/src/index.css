@@ -3272,3 +3272,16 @@ button.wl-summary{width:100%;padding:0 0 10px;text-align:start;border-radius:var
   .kpis .tile{padding:10px 11px}
   .kpis .tile .v{font-size:var(--fs-title3)}
 }
+/* Social uses the existing cards and controls; the feed also works on a narrow phone screen. */
+.social-field { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: .75rem 0; }
+.social-field input:not([type=checkbox]), .social-field textarea, .social-field select { width: 100%; min-height: 44px; padding: .6rem; color: var(--label); background: var(--surface-2); border: 1px solid var(--sep); border-radius: 8px; font: inherit; }
+.social-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.social-actions .btn { width: auto; flex: 1 1 auto; }
+.social-workout, .social-connection { overflow-wrap: anywhere; }
+.social-workout h2 { font-size: 1.1rem; font-weight: 600; color: var(--label); margin: .5rem 0; }
+.social-workout > .btn:first-child { width: auto; padding: 0; font-size: .875rem; }
+.social-workout details { margin: .75rem 0; }
+.social-workout summary { cursor: pointer; min-height: 44px; display: list-item; }
+.social-comments { list-style: none; padding: 0; }
+.social-comments .btn { width: auto; padding: 0; min-height: 36px; font-size: .875rem; }
+.social-connection { border-top: 1px solid var(--sep); padding: .75rem 0; }

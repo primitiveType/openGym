@@ -106,6 +106,7 @@ export function SettingsRoute() {
   const ctx = { user: useStore(s => s.user), mobile: MOBILE, ios: MOBILE && platformNow() !== 'android', android: MOBILE && platformNow() !== 'ios', mod: id => isOn({ modules, checkIn }, id) }
   if (page && (!PAGES[page] || !pageVisible(PAGES[page].parent || page, ctx) || !pageVisible(page, ctx))) return <Navigate to="/settings" replace />
   if (page === 'coach') return <Navigate to="/coach/setup" replace />
+  if (page === 'social') return <Navigate to="/social" replace />
   return <Settings key={page || 'root'} page={page || null} find={loc.state?.find || null} via={loc.state?.via || null} entryKey={loc.key} />
 }
 

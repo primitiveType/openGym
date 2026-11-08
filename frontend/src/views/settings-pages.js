@@ -25,6 +25,7 @@ export const PAGES = {
   watch: { title: 'Apple Watch', icon: 'watch', tint: 'var(--grey)', mod: 'watch' },
   // Settings → Integrations (v1.4.4): the directory of what openGym talks to (views/Integrations.jsx).
   integrations: { title: 'Integrations', icon: 'plug', tint: 'var(--indigo)', kw: 'integrations connect apps services webhook webhooks home assistant n8n ntfy node-red zapier automation garmin fitbit strava sync api mcp' },
+  social: { title: 'Social', icon: 'person', tint: 'var(--blue)', kw: 'social friends feed sharing federation activitypub privacy' },
   zepp: { title: 'Zepp OS watch', icon: 'watch', tint: 'var(--orange)', mod: 'watch' },
   data: { title: 'Data & backup', icon: 'folder', tint: 'var(--blue)' },
   about: { title: 'About & updates', icon: 'info', tint: 'var(--grey)' },
@@ -45,7 +46,7 @@ export const PAGE_IDS = Object.keys(PAGES)
 
 // The root, top to bottom. Whether a row shows is pageVisible's call.
 // Modules first, on its own: what the app shows at all comes before how each part behaves.
-export const ROOT_GROUPS = [['modules'], ['workout', 'alerts', 'reminders'], ['plan', 'units', 'equipment'], ['look', 'coach', 'watch', 'zepp'], ['integrations', 'data', 'about']]
+export const ROOT_GROUPS = [['modules'], ['workout', 'alerts', 'reminders'], ['plan', 'units', 'equipment'], ['look', 'coach', 'watch', 'zepp'], ['social', 'integrations', 'data', 'about']]
 
 /**
  * Whether a page exists for this device and profile. Reminders need a push server (signed in) or
@@ -57,6 +58,7 @@ export function pageVisible(page, ctx) {
   if (PAGES[page]?.mod && ctx.mod && !ctx.mod(PAGES[page].mod)) return false
   if (page === 'reminders') return !!(ctx.user || ctx.mobile)
   if (page === 'coach') return !!ctx.mobile
+  if (page === 'social') return !!ctx.user && !ctx.demo
   // The iPhone app only: the watch app ships inside it.
   if (page === 'watch') return !!ctx.ios
   // Signed in to a server: a Zepp OS watch reaches openGym through it (lib/watch-relay.js).
@@ -93,6 +95,7 @@ const MODULE_KW = {
   motivation: 'motivation streak challenges badges trophies recap wrapped year share gamification',
   coach: 'ai coach llm assistant review suggestions',
   integrations: 'integrations webhook webhooks home assistant n8n mcp automation',
+  social: 'social friends feed sharing activitypub federation privacy',
   seasonal: 'seasonal season halloween christmas advent calendar theme decoration',
 }
 export const SEARCH = [

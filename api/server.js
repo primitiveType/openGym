@@ -41,6 +41,7 @@ import { atomicWrite as durableWrite } from './durable.js';
 import { ipv6Groups, guardedLookup, pushEndpointError, MAX_PUSH_ENDPOINT } from './net-guard.js';
 import { createIntegrations } from './integrations/index.js';
 import { integrationRoutes } from './integrations/routes.js';
+import { createSocialClient, socialRoutes } from './social.js';
 import { excusedOn, nudgeFor, nudgeWindowOpen, toneOf } from './nudge.js';
 import { wrappedPushYear, wrappedSummary, wrappedPushOwed, wrappedPush } from './wrapped.js';
 
@@ -125,6 +126,9 @@ const SECRET = fs.readFileSync(secretFile, 'utf8').trim();
 // Integrations (integrations/, docs/INTEGRATIONS.md): off unless INTEGRATIONS names some. Their
 // connections live in DATA_DIR/integrations/, sealed with a key derived from SECRET.
 const integrations = createIntegrations({ dataDir: DATA, secret: SECRET, version: '1' });
+const social = createSocialClient({ dataDir: DATA, users: () => db.users, readState: uid => readState(uid) });
+const socialTimer = setInterval(() => social.reconcile().catch(e => console.error('social reconciliation', e.message)), 10000);
+socialTimer.unref();
 
 const dbFile = path.join(DATA, 'db.json');
 // Every account, passkey and invite. Only a missing file starts empty: an unreadable one (a write
@@ -1336,6 +1340,7 @@ async function removeEmail(req, res, user, body) {
 // device links and live presence, and outside db.json their training history, any Coach
 // credential and their photos and videos. The admin's delete and the account's own both end here.
 function removeAccount(u) {
+  social.remove(u.id);
   db.users = db.users.filter(x => x.id !== u.id);
   db.creds = (db.creds || []).filter(c => c.userId !== u.id);
   db.subs = (db.subs || []).filter(x => x.userId !== u.id);
@@ -2113,6 +2118,7 @@ const routes = {
       // block is how the app knows this server does not take photos and videos at all.
       ...(MEDIA_ON ? { media: mediaConfig(MEDIA_LIMITS) } : {}),
       ...(readSession(req) ? { coach: coachConfig.publicConfig() } : {}),
+      ...(readSession(req) && social.enabled ? { social: true } : {}),
       // Which integrations this server offers (only to a session, like the Coach block). Absent
       // with INTEGRATIONS unset, which is how the app knows to show the server cards as off.
       ...(readSession(req) && integrations.publicConfig() ? { integrations: integrations.publicConfig() } : {})
@@ -2624,6 +2630,7 @@ const routes = {
     // A finished workout, a record or a weigh-in the profile's integrations asked to hear about:
     // queued for delivery (integrations/outbox.js), never sent from inside this request.
     try { integrations.onStateWrite(user.id, cur, body.state); } catch (e) { console.error('integrations onStateWrite', e); }
+    social.onStateWrite(user.id);
     json(res, 200, { ok: true, ts: body.state._ts || null, rev: curRev + 1, wid: body.state._wid });
   },
 
@@ -2979,6 +2986,7 @@ const routes = {
   // integrations/routes.js, handed the same helpers. With INTEGRATIONS unset they answer an empty
   // list (GET) or 404 "off", so the routes exist on every server and the app can tell.
   ...integrationRoutes({ json, readBody, readSession, hub: integrations, audit }),
+  ...socialRoutes({ json, readBody, readSession, client: social, isAdmin }),
 
   /* ---------- photos & videos ---------- */
   // Absent, not refusing, when MEDIA_UPLOADS=0: a 404 is what a server from before the feature

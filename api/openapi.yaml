@@ -187,6 +187,76 @@ security:
   - bearerAuth: []
 
 paths:
+  /api/social:
+    get:
+      tags: [integrations]
+      operationId: readSocial
+      summary: Social status, feed, authorized profile history, or export
+      description: |
+        Requires a session. Returns enabled false when Social is not configured.
+        History resolves the current authorized view from a remote server; exports
+        contain the caller's owned social data and relationships, never signing keys.
+      parameters:
+        - in: query
+          name: view
+          schema: { type: string, enum: [status, feed, history, export], default: status }
+        - in: query
+          name: actor
+          schema: { type: string, format: uri }
+        - in: query
+          name: offset
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        '200':
+          description: Social status, feed page, history page, or owned data export.
+          content:
+            application/json:
+              schema: { type: object }
+        '400': { description: Invalid view or actor. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '503': { description: The social service is unavailable; training data is unaffected. }
+    post:
+      tags: [integrations]
+      operationId: changeSocial
+      summary: Manage the caller's social account and interactions
+      description: |
+        Requires a session and enabled social service. Profile creation requires explicit
+        consent. The API binds ownership to the authenticated user and never accepts
+        client-supplied user or administrator identity. Workouts remain authoritative
+        in the training log; this endpoint only changes sharing and social interactions.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: [profile, follow, accept, reject, unfollow, remove-friend, mute, block, visibility, like, comment, report, delete]
+                actor: { type: string, description: Remote account handle or actor URL. }
+                id: { type: string, description: Canonical workout object URL. }
+                visibility: { type: string, enum: [private, friends, public] }
+                consent: { type: boolean, description: Explicit consent to share existing and future workout history with approved friends. }
+                handle: { type: string, pattern: '^[a-z][a-z0-9_]{2,39}$' }
+                displayName: { type: string, maxLength: 80 }
+                bio: { type: string, maxLength: 500 }
+                publicProfile: { type: boolean }
+                text: { type: string, maxLength: 2000 }
+                reason: { type: string, maxLength: 1000 }
+                value: { type: boolean, description: Enable or disable a mute/block. }
+      responses:
+        '200':
+          description: Updated profile or acknowledged action.
+          content:
+            application/json:
+              schema: { type: object }
+        '400': { description: Invalid action, consent, handle, audience or content. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: Social is disabled or the resource is not accessible to the caller. }
+        '409': { description: Handle already exists or social account was deleted. }
+        '503': { description: The social service is unavailable; training data is unaffected. }
   /api/health:
     get:
       tags: [meta]

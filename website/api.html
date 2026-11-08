@@ -247,7 +247,7 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <p class="api-facts">
     <span>OpenAPI 3.1.0</span>
     <span>openGym v1.4.3</span>
-    <span>92 endpoints</span>
+    <span>94 endpoints</span>
     <span>AGPL-3.0-or-later</span>
   </p>
 
@@ -3008,6 +3008,159 @@ main.api-main .lead { color: var(--fg-2); max-width: 58ch; margin: 14px 0 0; fon
   <h2>Integrations</h2>
   <p class="sub">Settings → Integrations: outbound webhooks now, more providers later. Off unless the server runs with <code>INTEGRATIONS</code> (e.g. <code>INTEGRATIONS=webhook</code>); then a profile can add its own connections. Secrets are sealed at rest and shown once. See docs/INTEGRATIONS.md.</p>
   <div class="eps">
+
+<details class="ep" id="op-readSocial">
+  <summary>
+    <span class="m get">GET</span>
+    <span class="ep-path"><code>/api/social</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Social status, feed, authorized profile history, or export</span>
+  </summary>
+  <div class="ep-body">
+<p>Requires a session. Returns enabled false when Social is not configured. History resolves the current authorized view from a remote server; exports contain the caller's owned social data and relationships, never signing keys.</p>
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+<p class="ep-h">Query parameters</p><div class="ptab">
+  <div class="prow">
+    <span class="p-name">view</span>
+    <span class="p-type">&quot;status&quot; | &quot;feed&quot; | &quot;history&quot; | &quot;export&quot;</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">actor</span>
+    <span class="p-type">string <span class="p-hint">(uri)</span></span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">offset</span>
+    <span class="p-type">integer <span class="p-hint">(0&ndash;, default 0)</span></span>
+    <span class="p-desc"></span>
+  </div>
+</div>
+
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">Social status, feed page, history page, or owned data export.<span class="r-sig">object</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">400</span>
+    <span class="p-desc">Invalid view or actor.</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s5">503</span>
+    <span class="p-desc">The social service is unavailable; training data is unaffected.</span>
+  </div>
+    </div>
+  </div>
+</details>
+
+<details class="ep" id="op-changeSocial">
+  <summary>
+    <span class="m post">POST</span>
+    <span class="ep-path"><code>/api/social</code></span>
+    <span class="ep-chev" aria-hidden="true"></span>
+    <span class="ep-sum">Manage the caller's social account and interactions</span>
+  </summary>
+  <div class="ep-body">
+<p>Requires a session and enabled social service. Profile creation requires explicit consent. The API binds ownership to the authenticated user and never accepts client-supplied user or administrator identity. Workouts remain authoritative in the training log; this endpoint only changes sharing and social interactions.</p>
+    <p class="ep-auth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Requires a session: the cookie set at sign-in, or <code>Authorization: Bearer &lt;token&gt;</code> from mobile-app pairing.</span></p>
+
+<p class="ep-h">Request body <span class="p-hint">(JSON)</span></p><div class="ptab">
+  <div class="prow">
+    <span class="p-name">action<em class="p-req" title="required">required</em></span>
+    <span class="p-type">&quot;profile&quot; | &quot;follow&quot; | &quot;accept&quot; | &quot;reject&quot; | &quot;unfollow&quot; | &quot;remove-friend&quot; | &quot;mute&quot; | &quot;block&quot; | &quot;visibility&quot; | &quot;like&quot; | &quot;comment&quot; | &quot;report&quot; | &quot;delete&quot;</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">actor</span>
+    <span class="p-type">string</span>
+    <span class="p-desc">Remote account handle or actor URL.</span>
+  </div>
+  <div class="prow">
+    <span class="p-name">id</span>
+    <span class="p-type">string</span>
+    <span class="p-desc">Canonical workout object URL.</span>
+  </div>
+  <div class="prow">
+    <span class="p-name">visibility</span>
+    <span class="p-type">&quot;private&quot; | &quot;friends&quot; | &quot;public&quot;</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">consent</span>
+    <span class="p-type">boolean</span>
+    <span class="p-desc">Explicit consent to share existing and future workout history with approved friends.</span>
+  </div>
+  <div class="prow">
+    <span class="p-name">handle</span>
+    <span class="p-type">string</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">displayName</span>
+    <span class="p-type">string <span class="p-hint">(&le; 80 chars)</span></span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">bio</span>
+    <span class="p-type">string <span class="p-hint">(&le; 500 chars)</span></span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">publicProfile</span>
+    <span class="p-type">boolean</span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">text</span>
+    <span class="p-type">string <span class="p-hint">(&le; 2000 chars)</span></span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">reason</span>
+    <span class="p-type">string <span class="p-hint">(&le; 1000 chars)</span></span>
+    <span class="p-desc"></span>
+  </div>
+  <div class="prow">
+    <span class="p-name">value</span>
+    <span class="p-type">boolean</span>
+    <span class="p-desc">Enable or disable a mute/block.</span>
+  </div>
+</div>
+    <p class="ep-h">Responses</p>
+    <div class="ptab">
+  <div class="prow rrow">
+    <span class="r-code s2">200</span>
+    <span class="p-desc">Updated profile or acknowledged action.<span class="r-sig">object</span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">400</span>
+    <span class="p-desc">Invalid action</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">401</span>
+    <span class="p-desc">No session, expired/revoked session, or a disabled account.<span class="r-sig"><code>{&quot;error&quot;:&quot;not signed in&quot;}</code></span></span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">404</span>
+    <span class="p-desc">Social is disabled or the resource is not accessible to the caller.</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s4">409</span>
+    <span class="p-desc">Handle already exists or social account was deleted.</span>
+  </div>
+  <div class="prow rrow">
+    <span class="r-code s5">503</span>
+    <span class="p-desc">The social service is unavailable; training data is unaffected.</span>
+  </div>
+    </div>
+  </div>
+</details>
 
 <details class="ep" id="op-listIntegrations">
   <summary>

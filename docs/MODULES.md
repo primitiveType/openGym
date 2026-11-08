@@ -48,6 +48,12 @@ is chosen until another one is tapped, so skipping straight on gives you every m
 
 ## Nothing is deleted
 
+The fork adds Social. A module preset alone never creates a social identity or
+grants access to workout history: the owner must explicitly consent. Social off
+pauses sharing new workouts; existing shared logs still receive edits and
+deletions. Settings → Social stays available to revoke sharing or delete the
+social account. See [Federated Social](SOCIAL.md).
+
 Switching a module off only hides it. Your weigh-ins, photos, ratings, videos, challenges and the
 rest are kept, backed up, exported and synced as always. Switch it back on and everything is where
 it was.

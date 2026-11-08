@@ -16,6 +16,7 @@ export const moduleCopy = () => ({
   motivation: [t('Motivation'), t('Streaks, challenges, badges, recaps and your year in openGym.')],
   coach: [t('AI Coach'), t('Reviews your training and suggests changes. You still say yes or no.')],
   integrations: [t('Integrations'), t('Webhooks for Home Assistant and friends, and the MCP server.')],
+  social: [t('Social'), t('Follow friends and share workout logs across servers. Sharing requires your consent.')],
   seasonal: [t('Seasonal themes'), t('Halloween, Christmas and the advent calendar. Spooky, festive, optional.')],
 })
 

@@ -36,6 +36,7 @@ function useConnections() {
       if (readWatchStatus() || readGarminLink()) put({ watch: true })
     }
     if (user && !DEMO) {
+      if (config?.social) api('/api/social').then(d => { if (d.profile) put({ social: true }) }).catch(() => {})
       import('../lib/watch-relay.js').then(m => m.relayLinks()).then(links => { if (links.length) put({ watch: true }) }).catch(() => {})
       if ((config?.integrations?.providers || []).includes('webhook')) {
         api('/api/integrations').then(d => {
@@ -58,6 +59,7 @@ export function connectionNotes(ids, conn) {
     if (id === 'watch' && conn.watch) out.push(t('Your watch stops getting workouts while Watch is off. It stays paired.'))
     if (id === 'integrations' && conn.webhooks) out.push(t('Your webhooks stop sending while Integrations is off. They stay set up.'))
     if (id === 'coach' && conn.coach) out.push(t('Scheduled Coach reviews take a break while the AI Coach is off. Your setup and chats stay.'))
+    if (id === 'social' && conn.social) out.push(t('New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.'))
   }
   return out
 }

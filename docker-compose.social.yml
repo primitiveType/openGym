@@ -1,0 +1,38 @@
+# Opt in with: docker compose -f docker-compose.yml -f docker-compose.social.yml up -d --build
+services:
+  api:
+    environment:
+      SOCIAL_URL: http://social:3100
+      SOCIAL_TOKEN_FILE: /run/secrets/opengym_social
+    secrets:
+      - opengym_social
+
+  social:
+    image: opengym-social:local
+    build:
+      context: ./social
+      args:
+        VCS_REF: ${VCS_REF:-dev}
+    restart: unless-stopped
+    user: "${PUID:-1000}:${PGID:-1000}"
+    environment:
+      SOCIAL_ORIGIN: ${SOCIAL_ORIGIN:?Set the permanent public HTTPS origin for Social}
+      SOCIAL_TOKEN_FILE: /run/secrets/opengym_social
+      SOCIAL_PAUSED: ${SOCIAL_PAUSED:-0}
+      SOCIAL_ALLOWED_DOMAINS: ${SOCIAL_ALLOWED_DOMAINS:-}
+      SOCIAL_BLOCKED_DOMAINS: ${SOCIAL_BLOCKED_DOMAINS:-}
+    ports:
+      - "127.0.0.1:${SOCIAL_PORT:-3100}:3100"
+    volumes:
+      - ./social-data:/data
+    secrets:
+      - opengym_social
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,noexec,nosuid
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+
+secrets:
+  opengym_social:
+    file: ./social-secret

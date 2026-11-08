@@ -9,6 +9,7 @@ Pick the part that matches what you're doing. If you just have a question, try t
 |---|---|
 | [FAQ](FAQ.md) | You have a quick question: iPhone, cost, where your data goes, AI, the exercise media |
 | [Modules](MODULES.md) | You want a leaner app (just training, or training and body), or wonder what switching a module off hides and keeps |
+| [Federated Social](SOCIAL.md) | Run the fork's optional feed, share current workout history with approved friends, and connect servers |
 | [Phone app](MOBILE.md) | You want the iPhone app, the Apple Watch or the Android APK, or to connect the app to your own server |
 | [Wear OS watch](WEAR_OS.md) | You want openGym on a Galaxy Watch, Pixel Watch or another Wear OS watch, or you work on the watch app |
 | [Garmin watch](GARMIN.md) | You want openGym on a Forerunner, fēnix, Venu, Instinct or another Garmin, or you build and publish the Connect IQ app |

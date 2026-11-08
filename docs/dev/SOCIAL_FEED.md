@@ -1,6 +1,8 @@
 # Federated social module plan
 
-Status: design proposal. Implementation belongs on `feature/social-feed` in
+Status: initial implementation on `feature/social-feed`; public pilot deployment
+and compatibility with other ActivityPub software remain to be verified. See
+[operation and validation](../SOCIAL.md). Development is in
 [primitiveType/openGym](https://github.com/primitiveType/openGym).
 
 Add an optional Hevy-style feed where people on independent openGym servers can
