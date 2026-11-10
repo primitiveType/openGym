@@ -99,7 +99,12 @@ someone by `@name@domain` or their actor URL, send a follow request, and approve
 incoming requests. Follow approval is directional: each person approves access
 to their own logs.
 
-Use Your workouts to choose Only me, Friends, or Public for each workout. A friend's
+The feed shows each workout’s audience, duration, sets, volume, and an exercise
+preview. Expand Exercises for set details, or Comments to read and reply. The
+gear button opens Manage social profile, including Connections.
+
+Use Your workouts and expand Who can see this workout? to choose Only me,
+Friends, or Public for each workout. A friend's
 profile opens their current authorized history. Historic imports are browsable
 without generating a burst of notifications. New training changes reconcile with
 the social service every ten seconds; open feed screens refresh every thirty

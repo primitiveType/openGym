@@ -1,4 +1,10 @@
 export default {
+  "Comments": "Comments",
+  "+{0} more exercise": "+{0} more exercise",
+  "+{0} more exercises": "+{0} more exercises",
+  "Workouts from people you follow.": "Workouts from people you follow.",
+  "Follow people across openGym servers to see their workouts here.": "Follow people across openGym servers to see their workouts here.",
+
   "Your social profile was deleted. Your private training log is unchanged.": "Your social profile was deleted. Your private training log is unchanged.",
   "Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.": "Shared workouts will be removed and deletion requests sent to other servers. You cannot reactivate Social on this training account. Your private training log stays.",
   "New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.": "New workouts stop being shared while Social is off. Existing shared logs still receive edits and deletions.",
