@@ -126,7 +126,12 @@ For the media-stack checkout, the optional `compose.social.yml` and
 `$CONFIG_ROOT/appdata/opengym-social`, and mount the shared secret from
 `$CONFIG_ROOT/secrets/opengym-social`. When enabled, the daily openGym backup copies
 both services and this secret into the same archive; the existing Google Drive
-upload also covers it. This integration is disabled on the current server.
+upload also covers it. The overlay includes an isolated Caddy proxy with automatic
+HTTPS on the configured LAN address's TCP ports 80 and 443. The router must forward
+those same ports to that reserved address. Only federation paths are proxied;
+the training app and `/internal` stay private. See the
+[media-stack deployment notes](https://github.com/primitiveType/media-stack#opengym-backups-and-google-drive-copies)
+for the current host and recovery details.
 
 Restore to an isolated directory using the same social domain, secret, and matching
 images. Set `SOCIAL_PAUSED=1`, reconcile the restored training data, and review

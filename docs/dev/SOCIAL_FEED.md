@@ -1,6 +1,7 @@
 # Federated social module plan
 
-Status: initial implementation on `feature/social-feed`; public pilot deployment
+Status: initial implementation on `feature/social-feed`, deployed to the first
+server with verified public HTTPS. A pilot with an independently operated server
 and compatibility with other ActivityPub software remain to be verified. See
 [operation and validation](../SOCIAL.md). Development is in
 [primitiveType/openGym](https://github.com/primitiveType/openGym).
